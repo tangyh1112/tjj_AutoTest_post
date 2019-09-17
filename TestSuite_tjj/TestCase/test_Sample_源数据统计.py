@@ -19,6 +19,7 @@ class eventRecord(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.projectId = localReadConfig.get_http("projectId")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.userId = localReadConfig.get_http("userId")
         cls.nowtime = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         cls.beforetime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=30), '%Y-%m-%d %H:%M:%S')
@@ -35,7 +36,7 @@ class eventRecord(unittest.TestCase):
         '''源数据统计结果'''
         global reportsourceList
         data = {"endTime":self.beforetime,"projectId":self.projectId,"signName":self.signName,"startTime":self.nowtime}
-        url_part = "/dmp-aly/reportsource" + utils.parse_url(data)
+        url_part = self.dmp + "/reportsource" + utils.parse_url(data)
         reportsourceList = utils().getRequest(url_part,Token=self.Token)
 
     def test_02_Hivereport(self):
@@ -68,7 +69,7 @@ class eventRecord(unittest.TestCase):
                           "sampleType": sampleType,
                           "signName": self.signName
                         }
-                url_part = "/dmp-aly/sample"
+                url_part = self.dmp + "-aly/sample"
                 utils().getRequestForExport(url_part, data=data, Token=self.Token)
 
 if __name__ == "__main__":

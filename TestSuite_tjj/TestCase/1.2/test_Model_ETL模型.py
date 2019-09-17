@@ -20,6 +20,7 @@ class Model(unittest.TestCase):
     def setUpClass(cls):
         cls.UserAgent = localReadConfig.get_http("UserAgent")
         cls.projectCode = localReadConfig.get_http("projectCode")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.projectId = localReadConfig.get_http("projectId")
         cls.nowtime = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         cls.beforetime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=30), '%Y-%m-%d %H:%M:%S')
@@ -33,7 +34,7 @@ class Model(unittest.TestCase):
     # @unittest.skip("创建已完成，暂不创建")
     def test_01_projectmodel(self):
         '''创建模型'''
-        url_part = "/dmp/projectmodel"
+        url_part = self.dmp + "/projectmodel"
         modelDictIds = utils().getDict(type="model_type", Token=self.Token)
         modelDictIds.pop()
         # for modelDictId in modelDictIds:
@@ -48,13 +49,13 @@ class Model(unittest.TestCase):
     def test_02_modelPage(self):
         '''模型管理分页查询'''
         global modelPageList
-        url_part = "/dmp/projectmodel/page?projectId="+str(self.projectId)
+        url_part = self.dmp + "/projectmodel/page?projectId="+str(self.projectId)
         modelPageList = utils().getRequest(url_part, Token=self.Token)
 
     @unittest.skip("创建已完成，暂不创建")
     def test_03_modelPage(self):
         '''修改模型'''
-        url_part = "/dmp/projectmodel"
+        url_part = self.dmp + "/projectmodel"
         data = {
                   "code": "testETLCode",
                   "createTime": modelPageList[0]['createTime'],
@@ -69,7 +70,7 @@ class Model(unittest.TestCase):
     def test_04_modelPage(self):
         '''编辑查询单模型'''
         global modelTable #待处理的表模型
-        url_part = "/dmp/projectmodel/"+str(modelPageList[0]['id'])
+        url_part = self.dmp + "/projectmodel/"+str(modelPageList[0]['id'])
         projectModelInstenceList = utils().getRequest(url_part, Token=self.Token)
         for table in projectModelInstenceList['projectModelInstence']['tables']:
             if table['tableName'] == self.tableName:
@@ -79,17 +80,17 @@ class Model(unittest.TestCase):
     @unittest.skip("暂不删除")
     def test_05_modelPage(self):
         '''删除模型'''
-        url_part = "/dmp/projectmodel/"+str(modelPageList[0]['id'])
+        url_part = self.dmp + "/projectmodel/"+str(modelPageList[0]['id'])
         utils().putOrDelRequest(option="delete", url_part=url_part, Token=self.Token)
 
     def test_06_modelPage(self):
         '''查询表字段信息'''
-        url_part = "/dmp/projectmodeletl/hive/"+self.tableName
+        url_part = self.dmp + "/projectmodeletl/hive/"+self.tableName
         utils().getRequest(url_part, Token=self.Token)
 
     def test_07_modelPage(self):
         '''设置ETL'''
-        url_part = "/dmp/projectmodeletl"
+        url_part = self.dmp + "/projectmodeletl"
         data = {
                   "modelId": modelPageList[0]['id'],
                   "projectId": self.projectId,
@@ -113,7 +114,7 @@ class Model(unittest.TestCase):
 
     def test_08_projectmodeletl(self):
         '''任务调用，并生成脚本'''
-        url_part = "/dmp/projectmodel/model/" + str(modelPageList[0]['id'])
+        url_part = self.dmp + "/projectmodel/model/" + str(modelPageList[0]['id'])
         utils().getRequest(url_part, Token=self.Token)
 
 if __name__ == "__main__":

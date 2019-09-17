@@ -18,6 +18,7 @@ class userBag(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.projectId = localReadConfig.get_http("projectId")
+        cls.projectId = localReadConfig.get_http("dmp")
         cls.projectCode = localReadConfig.get_http("projectCode")
         cls.database = localReadConfig.get_db("database1")
         cls.userTagCodes = [] #待选择的标签，如果不填，则默认选择20个code

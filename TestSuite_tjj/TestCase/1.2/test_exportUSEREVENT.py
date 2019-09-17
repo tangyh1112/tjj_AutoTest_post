@@ -18,6 +18,7 @@ class userAnalyst(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.projectId = localReadConfig.get_http("projectId")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.nowtime = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         cls.beforetime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=30), '%Y-%m-%d %H:%M:%S')
         cls.Token = utils().getToken()
@@ -31,7 +32,7 @@ class userAnalyst(unittest.TestCase):
         人群包导出 签名+事件+口径
         '''
         statisticalCaliberList = ["total_amount","user_amount","average_amount"]
-        part = "/dmp/metaevent/userBag"
+        part = self.dmp + "/metaevent/userBag"
         for statisticalCaliber in statisticalCaliberList:
             data = {"projectCode":"test_tjj","projectId":1,"signName":"YY语音","simpleAnalysis":"false",
                     "startTime":"2019-08-08 00:00:00","endTime":"2019-08-11 00:00:00",
@@ -45,7 +46,7 @@ class userAnalyst(unittest.TestCase):
         人群包导出 事件+口径
         '''
         statisticalCaliberList = ["total_amount","user_amount","average_amount"]
-        part = "/dmp/metaevent/userBag"
+        part = self.dmp + "/metaevent/userBag"
         for statisticalCaliber in statisticalCaliberList:
             data = {"projectCode":"test_tjj","projectId":1,"signName":"","simpleAnalysis":"false",
                     "startTime":"2019-08-08 00:00:00","endTime":"2019-08-11 00:00:00",
@@ -58,7 +59,7 @@ class userAnalyst(unittest.TestCase):
         '''
         人群包导出 签名+简单分析
         '''
-        part = "/dmp/metaevent/userBag"
+        part = self.dmp + "/metaevent/userBag"
         data = {"projectCode":"test_tjj","projectId":1,"signName":"YY语音","simpleAnalysis":"true",
                 "startTime":"2019-08-08 00:00:00","endTime":"2019-08-11 00:00:00",
                 "metaEventCode": "", "statisticalCaliber": ""}

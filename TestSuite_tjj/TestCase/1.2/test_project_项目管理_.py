@@ -19,6 +19,7 @@ class Project(unittest.TestCase):
     def setUpClass(cls):
         cls.UserAgent = localReadConfig.get_http("UserAgent")
         cls.projectCode = localReadConfig.get_http("projectCode")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.projectId = localReadConfig.get_http("projectId")
         cls.nowtime = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         cls.beforetime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=30), '%Y-%m-%d %H:%M:%S')
@@ -31,7 +32,7 @@ class Project(unittest.TestCase):
     def test_02_modelPage(self):
         '''模型管理分页查询'''
         global CalModel
-        url_part = "/dmp/projectmodel/page?projectId="+str(self.projectId)
+        url_part = self.dmp + "/projectmodel/page?projectId="+str(self.projectId)
         modelPageList = utils().getRequest(url_part, Token=self.Token)
         for model in modelPageList:
             if model['name'].find('testCAL') != -1:

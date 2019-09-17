@@ -18,6 +18,7 @@ class userAnalyst(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.projectId = localReadConfig.get_http("projectId")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.signNameForSearch = "雷" #签名模糊查询的参数
         cls.signName = "比心" #签名模糊查询的参数
         cls.eventtypeName = "测试带属性的元事件" #hive中存在数据的元事件分类名称--用于查询
@@ -35,7 +36,7 @@ class userAnalyst(unittest.TestCase):
         '''项目列表信息'''
         global project# 项目信息
         project = ""
-        url_part = "/dmp/projectinfo/page?current=1&size=20"
+        url_part = self.dmp + "/projectinfo/page?current=1&size=20"
         projectinfoPageList = utils().getRequest(url_part,Token=self.Token)
         for projectinfo in projectinfoPageList['projectInfoPage']['records']:
             if str(projectinfo['id']) == self.projectId:
@@ -62,7 +63,7 @@ class userAnalyst(unittest.TestCase):
     #     '''元事件分类查询'''
     #     global eventtype# 元事件分类
     #     eventtype = ""
-    #     url_part = "/dmp/metaeventtype/byprojectid/" + str(self.projectId)
+    #     url_part = self.dmp + "/metaeventtype/byprojectid/" + str(self.projectId)
     #     eventtypeList = utils().getRequest(url_part, Token=self.Token)
     #     if eventtypeList:
     #         for type in eventtypeList:
@@ -72,7 +73,7 @@ class userAnalyst(unittest.TestCase):
     # def test_04_eventtype(self):
     #     '''元事件查询'''
     #     global event# 元事件
-    #     url_part = "/dmp/metaevent/bytypeid/" + str(eventtype['id'])
+    #     url_part = self.dmp + "/metaevent/bytypeid/" + str(eventtype['id'])
     #     eventList = utils().getRequest(url_part, Token=self.Token)
     #     if eventList:
     #         for ev in eventList:
@@ -84,7 +85,7 @@ class userAnalyst(unittest.TestCase):
         用户事件分析查询
         1.简单分析：签名+日期'''
         global simpleanalysisdata
-        url_part = "/dmp/metaevent/analysis"#sign['signName']
+        url_part = self.dmp + "/metaevent/analysis"#sign['signName']
         simpleanalysisdata = {"projectCode":project['code'],"projectId":project['id'],"signName": self.signName, "simpleAnalysis":True, "startTime":str(self.beforetime),"endTime":str(self.nowtime)}
         print(simpleanalysisdata)
         # utils().postRequest(url_part, Content_type="json", data=simpleanalysisdata, Token=self.Token)
@@ -94,7 +95,7 @@ class userAnalyst(unittest.TestCase):
     #     用户事件分析查询
     #     1.用户事件分析：签名(可有可无)+日期+事件+口径'''
     #     global analysisdata
-    #     url_part = "/dmp/metaevent/analysis"
+    #     url_part = self.dmp + "/metaevent/analysis"
     #     statisticalCaliberList = ["total_amount","user_amount","average_amount"] # 总次数/用户数/人均次数
     #     signNameList = ["",self.signName] # 未选择签名/选择了某个签名（但不是简单分析） sign['signName']
     #     for statisticalCaliber in statisticalCaliberList:
@@ -111,7 +112,7 @@ class userAnalyst(unittest.TestCase):
     #     人群包导出
     #     1.未查询，提示：用户画像未生成
     #     '''
-    #     url_part = "/dmp/metaevent/userBag"
+    #     url_part = self.dmp + "/metaevent/userBag"
     #     data = {"projectCode":project['code'],"projectId":project['id'],"signName":"盛趣游戏","simpleAnalysis":"false",
     #             "startTime":"2019-05-18 00:00:00","endTime":"2019-05-20 00:00:00",
     #             "metaEventCode": "tixian2", "statisticalCaliber": "total_amount"}
@@ -123,7 +124,7 @@ class userAnalyst(unittest.TestCase):
         人群包导出
         2.简单分析导出
         '''
-        url_part = "/dmp/metaevent/userBag"
+        url_part = self.dmp + "/metaevent/userBag"
         data = simpleanalysisdata
         print(data)
         print("简单分析")

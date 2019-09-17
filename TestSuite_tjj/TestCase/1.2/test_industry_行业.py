@@ -14,7 +14,7 @@ import datetime
 case_path = sys.path[0]
 localReadConfig = readConfig.ReadConfig()
 class industry(unittest.TestCase):
-    '''用户标签'''
+    '''行业'''
     @classmethod
     def setUpClass(cls):
         cls.projectId = localReadConfig.get_http("projectId")

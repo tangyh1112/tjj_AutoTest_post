@@ -17,6 +17,7 @@ class tableSearch(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.projectId = localReadConfig.get_http("projectId")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.nowtime = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         cls.beforetime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=30), '%Y-%m-%d %H:%M:%S')
         cls.Token = utils().getToken()
@@ -29,14 +30,14 @@ class tableSearch(unittest.TestCase):
         '''
         表查询
         '''
-        url_part = "/dmp/warehouse/tables?projectId={}".format(self.projectId, "event_record")
+        url_part = self.dmp + "/warehouse/tables?projectId={}".format(self.projectId, "event_record")
         utils().getRequest(url_part, Token=self.Token)
 
     def test_02_tablerecord(self):
         '''
         表字段查询
         '''
-        url_part = "/dmp/warehouse/tablerecord?projectId={}&tableName={}".format(self.projectId, "key_words")
+        url_part = self.dmp + "/warehouse/tablerecord?projectId={}&tableName={}".format(self.projectId, "key_words")
         utils().getRequest(url_part, Token=self.Token)
 
 if __name__ == "__main__":

@@ -20,6 +20,7 @@ class userTag(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.UserAgent = localReadConfig.get_http("UserAgent")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.projectId = 1
         cls.projectCode = "test_tjj"
         cls.userTagCode = "je"
@@ -36,7 +37,7 @@ class userTag(unittest.TestCase):
     #     '''创建标签分类'''
     #     global tagTypeName
     #     tagTypeName = "yinziTest"
-    #     url_part = "/dmp/usertagtype"
+    #     url_part = self.dmp + "/usertagtype"
     #     data = {
     #         "createTime": self.nowtime,
     #         "name": tagTypeName,
@@ -48,19 +49,19 @@ class userTag(unittest.TestCase):
     # def test_0201_usertagtype(self):
     #     '''标签分类查询'''
     #     global usertagtype
-    #     url_part = "/dmp/usertagtype/"+str(self.projectId)
+    #     url_part = self.dmp + "/usertagtype/"+str(self.projectId)
     #     usertagtype = utils().getRequest(url_part,Token=self.Token)
     #
     # def test_0202_metaeventtype(self):
     #     '''元事件分类查询'''
     #     global eventtypes
-    #     url_part = "/dmp/metaeventtype/byprojectid/"+str(self.projectId)
+    #     url_part = self.dmp + "/metaeventtype/byprojectid/"+str(self.projectId)
     #     eventtypes = utils().getRequest(url_part,Token=self.Token)
     #
     # def test_0203_metaeventtype(self):
     #     '''元事件分类编辑'''
     #     global eventtypes
-    #     url_part = "/dmp/metaeventtype/byprojectid/"+str(self.projectId)
+    #     url_part = self.dmp + "/metaeventtype/byprojectid/"+str(self.projectId)
     #     eventtypes = utils().getRequest(url_part,Token=self.Token)
     #
     # def test_0201_metaeventtype(self):
@@ -68,7 +69,7 @@ class userTag(unittest.TestCase):
     #     global events
     #     for eventtype in eventtypes:
     #         if eventtype['name'] == "充值提现":
-    #             url_part = "/dmp/metaevent/page?current=1&size=10&typeId="+str(eventtype['id'])
+    #             url_part = self.dmp + "/metaevent/page?current=1&size=10&typeId="+str(eventtype['id'])
     #     events = utils().getRequest(url_part,Token=self.Token)
     #
     # def test_0202_metaeventtype(self):
@@ -76,12 +77,12 @@ class userTag(unittest.TestCase):
     #     global event
     #     for event in events:
     #         if event['code'] == 'tixian':
-    #             url_part = "/dmp/metaevent/info/"+str(event['id'])
+    #             url_part = self.dmp + "/metaevent/info/"+str(event['id'])
     #     event = utils().getRequest(url_part,Token=self.Token)
     #
     # def test_03_usertaglayer(self):
     #     '''新增用户标签'''
-    #     url_part = "/dmp/usertag"
+    #     url_part = self.dmp + "/usertag"
     #     userTagLayerRule = { "existed": 1,
     #                          "metaEventPropertyId": event['metaEventProperties'][0]['id'],
     #                          "metaEventId": event['metaEvent']['id'],
@@ -115,7 +116,7 @@ class userTag(unittest.TestCase):
     def test_04_usertag(self):
         '''标签查询'''
         global userTagForExcel#用于Excel导出的标签数据
-        url_part = "/dmp/usertag/byprojectcode?projectCode="+self.projectCode
+        url_part = self.dmp + "/usertag/byprojectcode?projectCode="+self.projectCode
         tags = utils().getRequest(url_part, Token=self.Token)
         for tag in tags:
             if tag['code'] == self.userTagCode:
@@ -124,7 +125,7 @@ class userTag(unittest.TestCase):
 
     def test_05_usertagExcel(self):
         '''标签人群包导出'''
-        url_part = "/dmp/usertag/excel?id="+str(userTagForExcel['id'])
+        url_part = self.dmp + "/usertag/excel?id="+str(userTagForExcel['id'])
         utils().getRequestForExport(url_part, Token=self.Token)
         print(1)
 

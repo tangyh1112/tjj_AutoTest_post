@@ -3,7 +3,7 @@
 
 '''
 @author: yinzi
-Project:模型管理
+Project:模型管理-计算
 '''
 import readConfig as readConfig
 from Public.Utils import utils
@@ -20,6 +20,7 @@ class Model(unittest.TestCase):
     def setUpClass(cls):
         cls.UserAgent = localReadConfig.get_http("UserAgent")
         cls.projectCode = localReadConfig.get_http("projectCode")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.projectId = localReadConfig.get_http("projectId")
         cls.nowtime = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         cls.beforetime = datetime.datetime.strftime(datetime.datetime.now() - datetime.timedelta(days=30), '%Y-%m-%d %H:%M:%S')
@@ -33,7 +34,7 @@ class Model(unittest.TestCase):
     # @unittest.skip("创建已完成，暂不创建")
     # def test_01_projectmodel(self):
     #     '''创建模型'''
-    #     url_part = "/dmp/projectmodel"
+    #     url_part = self.dmp + "/projectmodel"
     #     modelDictIds = utils().getDict(type="model_type", Token=self.Token)
     #     modelDictIds.pop()
     #     for modelDictId in modelDictIds:
@@ -49,7 +50,7 @@ class Model(unittest.TestCase):
     def test_02_modelPage(self):
         '''模型管理分页查询'''
         global CalModel
-        url_part = "/dmp/projectmodel/page?projectId="+str(self.projectId)
+        url_part = self.dmp + "/projectmodel/page?projectId="+str(self.projectId)
         modelPageList = utils().getRequest(url_part, Token=self.Token)
         for model in modelPageList:
             if model['name'].find('testCAL') != -1:
@@ -57,7 +58,7 @@ class Model(unittest.TestCase):
 
     def test_03_projectmodelcal(self):
         '''计算模型设置'''
-        url_part = "/dmp/projectmodelcal"
+        url_part = self.dmp + "/projectmodelcal"
         data = {
                   "modelId": CalModel['id'],
                   "projectId": self.projectId

@@ -19,6 +19,7 @@ class eventRecord(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.projectId = localReadConfig.get_http("projectId")
+        cls.dmp = localReadConfig.get_http("dmp")
         cls.database = localReadConfig.get_db("database1")
         cls.eventtypeName = ""#"测试带属性的元事件"#元事件分类名称，如果这边写明了，则不再创建
         cls.eventName = ""#元事件名称，如果这边写明了，则不再创建
@@ -37,7 +38,7 @@ class eventRecord(unittest.TestCase):
     def test_01_projectinfoPage(self):
         '''项目列表信息'''
         global projectinfoPageList# 项目列表信息
-        url_part = "/dmp/projectinfo/page?current=1&size=20"
+        url_part = self.dmp + "/projectinfo/page?current=1&size=20"
         projectinfoPageList = utils().getRequest(url_part,Token=self.Token)
 
     def test_02_metaeventtype(self):
@@ -45,7 +46,7 @@ class eventRecord(unittest.TestCase):
         global eventtypeName#元事件分类名称
         eventtypeName = self.eventtypeName
         if eventtypeName == "":#如果元事件分类名称没有，则新增
-            url_part = "/dmp/metaeventtype"
+            url_part = self.dmp + "/metaeventtype"
             query_param = ['%%%s%%' % 'eventTypetest']
             self.sql = "SELECT name FROM dmp_meta_event_type where name like %s order by id asc;"
             sqlResult = MyDB().executeSQL(self.sql, query_param, database=self.database)
@@ -68,7 +69,7 @@ class eventRecord(unittest.TestCase):
     def test_03_metaeventtype(self):
         '''查询元事件分类'''
         global eventType, allEventType#元事件分类名称
-        url_part = "/dmp-/metaeventtype/byprojectid/" + str(self.projectId)
+        url_part = self.dmp + "-/metaeventtype/byprojectid/" + str(self.projectId)
         requestData = utils().getRequest(url_part,Token=self.Token)
         if requestData:
             allEventType = requestData
@@ -80,7 +81,7 @@ class eventRecord(unittest.TestCase):
     def test_04_metaevent(self):
         '''创建元事件'''
         global sqlResult, metaEventData
-        url_part = "/dmp/metaevent"
+        url_part = self.dmp + "/metaevent"
         # for i in range(1, 30):
         sqlResult = eventRecord().getSqlResult()
         metaEventProperties = []
@@ -128,7 +129,7 @@ class eventRecord(unittest.TestCase):
         1.根据分类ID查询元事件
         2.根据元事件ID查询元事件详细信息'''
         global event, eventContent#元事件
-        url_part = "/dmp/metaevent/page?current=1&size=10&typeId=" + str(eventType['id'])
+        url_part = self.dmp + "/metaevent/page?current=1&size=10&typeId=" + str(eventType['id'])
         requestData = utils().getRequest(url_part, Token=self.Token)
         if requestData:
             for data in requestData['records']:
@@ -136,7 +137,7 @@ class eventRecord(unittest.TestCase):
                     event = data
                     break
 
-        url_part = "/dmp/metaevent/info/" + str(event['id'])
+        url_part = self.dmp + "/metaevent/info/" + str(event['id'])
         requestData = utils().getRequest(url_part, Token=self.Token)
         if requestData:
             eventContent = requestData
@@ -147,7 +148,7 @@ class eventRecord(unittest.TestCase):
         1.修改元事件基本信息（元事件名称、元事件显示名、元事件分类ID、描述），版本号不变
         '''
         global waitModifyEventData#修改过的元事件模板
-        url_part = "/dmp/metaevent"
+        url_part = self.dmp + "/metaevent"
         ModifyEventDataList = []
         waitModifyList = ["code", "name", "typeId", "description"]
         for waitModify in waitModifyList:
@@ -179,7 +180,7 @@ class eventRecord(unittest.TestCase):
         编辑元事件
         2.修改元事件关键词(新增关键词/删除关键词/删除一行关键词)，版本号+0.1
         '''
-        url_part = "/dmp/metaevent"
+        url_part = self.dmp + "/metaevent"
         waitList = ["insert", "delete", "deleteLine"]
         for waitmodifyKeywords in waitList:
             if waitmodifyKeywords == "insert":
@@ -203,7 +204,7 @@ class eventRecord(unittest.TestCase):
         编辑元事件
         2.修改元事件属性(属性名/属性显示名/数据类型/删除属性/新增属性)，版本号+0.1
         '''
-        url_part = "/dmp/metaevent"
+        url_part = self.dmp + "/metaevent"
         waitList = ["code", "name", "propertyType", "delete", "insert"]
         for Properties in waitList:
             if Properties == "code":
@@ -243,7 +244,7 @@ class eventRecord(unittest.TestCase):
         删除元事件-情景说明
         一：元事件在当天创建的，可以删除
         '''
-        url_part = "/dmp/metaevent/" + str(event['id'])
+        url_part = self.dmp + "/metaevent/" + str(event['id'])
         print("元事件在当天创建的，删除ID为"+str(event['id'])+"的元事件，删除成功")
         utils().putOrDelRequest("DELETE", url_part, Token=self.Token)
 
@@ -252,7 +253,7 @@ class eventRecord(unittest.TestCase):
         删除元事件-情景说明
         一：元事件非当天创建的，hive中存在对应的元事件记录不可删除
         '''
-        url_part = "/dmp/metaevent/" + str(self.usedEventId)
+        url_part = self.dmp + "/metaevent/" + str(self.usedEventId)
         print("元事件非当天创建的,删除ID为"+str(self.usedEventId)+"的元事件,删除提示：元事件下存在数据不能被删除")
         utils().putOrDelRequest("DELETE", url_part, Token=self.Token)
 
@@ -261,7 +262,7 @@ class eventRecord(unittest.TestCase):
         删除元事件分类-情景说明
         一：分类下不存在元事件，删除成功
         '''
-        url_part = "/dmp/metaeventtype/" + str(event['typeId'])
+        url_part = self.dmp + "/metaeventtype/" + str(event['typeId'])
         print("元事件分类下不存在元事件,删除分类ID为"+str(event['typeId'])+"的元事件,删除成功")
         utils().putOrDelRequest("DELETE", url_part, Token=self.Token)
 
@@ -271,7 +272,7 @@ class eventRecord(unittest.TestCase):
         一：分类下存在元事件，删除失败
         '''
         typeId = 18
-        url_part = "/dmp/metaeventtype/" + str(self.usedTypeId)
+        url_part = self.dmp + "/metaeventtype/" + str(self.usedTypeId)
         print("元事件分类下存在元事件,删除分类ID为"+str(typeId)+"的元事件,删除提示：元事件类型下存在元事件不能删除")
         utils().putOrDelRequest("DELETE", url_part, Token=self.Token)
 
